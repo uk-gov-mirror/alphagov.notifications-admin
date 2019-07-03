@@ -43,11 +43,10 @@
           <li><a href="{{ url_for('main.support') }}" {{ header_navigation.is_selected('support') }}>Support</a></li>
           {% if current_user.is_authenticated %}
             <li><a href="{{ url_for('main.documentation') }}" {{ header_navigation.is_selected('documentation') }}>Documentation</a></li>
-            <li><a href="{{ url_for('main.user_profile') }}" {{ header_navigation.is_selected('user-profile') }}>{{ current_user.name }}</a></li>
             {% if current_user.platform_admin %}
               <li><a href="{{ url_for('main.platform_admin') }}" {{ header_navigation.is_selected('platform-admin') }}>Platform admin</a></li>
             {% endif %}
-            <li><a href="{{ url_for('main.sign_out')}}">Sign out</a></li>
+            <li><a href="{{ url_for('main.user_profile') }}" {{ header_navigation.is_selected('user-profile') }}>{{ current_user.name }}</a></li>
           {% else %}
             <li><a href="{{ url_for('main.features') }}" {{ header_navigation.is_selected('features') }}>Features</a></li>
             <li><a href="{{ url_for('main.pricing' )}}" {{ header_navigation.is_selected('pricing') }}>Pricing</a></li>

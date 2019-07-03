@@ -8,7 +8,19 @@
 
 {% block maincolumn_content %}
 
-  <h1 class="heading-large">Your profile</h1>
+  <div class="grid-row">
+    <div class="column-three-quarters">
+      <h1 class="heading-large">Your profile</h1>
+    </div>
+
+    <div class="column-one-quarter">
+      <div class="table-field-right-aligned">
+        <a href="{{ url_for('.sign_out') }}" class="align-with-heading">Sign out</a>
+      </div>
+    </div>
+
+  </div>
+
 
   <div class="body-copy-table">
     {% call mapping_table(
