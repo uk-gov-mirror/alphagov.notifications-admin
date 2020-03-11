@@ -3,6 +3,7 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/form.html" import form_wrapper %}
+{% from "components/radios/macro.njk" import govukRadios %}
 
 {% block per_page_title %}
   {{ page_title }}
@@ -17,7 +18,18 @@
         back_link=url_for('.support')
       ) }}
       {% call form_wrapper() %}
-        {{ radios(form.severe) }}
+        {{ govukRadios({
+          "name": form.severe.name,
+          "fieldset": {
+            "legend": {
+              "text": form.severe.label.text
+            }
+          },
+          "errorMessage": {
+            "text": form.severe.errors[0]
+          } if form.severe.errors else False,
+          "items": wtforms_option_fields_to_govuk_items(form.severe)
+        }) }}
         {{ page_footer('Continue') }}
       {% endcall %}
       <h2 class="heading-small">

@@ -2,6 +2,7 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/form.html" import form_wrapper %}
+{% from "components/radios/macro.njk" import govukRadios %}
 
 {% extends "org_template.html" %}
 
@@ -15,7 +16,18 @@
     back_link=url_for('.organisation_settings', org_id=current_org.id)
   ) }}
   {% call form_wrapper() %}
-    {{ radios(form.organisation_type) }}
+    {{ govukRadios({
+      "name": form.organisation_type.name,
+      "fieldset": {
+        "legend": {
+          "text": form.organisation_type.label.text
+        }
+      },
+      "errorMessage": {
+        "text": form.organisation_type.errors[0]
+      } if form.organisation_type.errors else False,
+      "items": wtforms_option_fields_to_govuk_items(form.organisation_type)
+    }) }}
     {{ page_footer('Save') }}
   {% endcall %}
 {% endblock %}

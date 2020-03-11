@@ -3,6 +3,7 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/radios.html" import radios %}
 {% from "components/form.html" import form_wrapper %}
+{% from "components/radios/macro.njk" import govukRadios %}
 
 {% block service_page_title %}
   Change postage
@@ -17,7 +18,18 @@
     {% call form_wrapper() %}
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-five-sixths">
-          {{ radios(form.postage) }}
+          {{ govukRadios({
+            "name": form.postage.name,
+            "fieldset": {
+              "legend": {
+                "text": form.postage.label.text
+              }
+            },
+            "errorMessage": {
+              "text": form.postage.errors[0]
+            } if form.postage.errors else False,
+            "items": wtforms_option_fields_to_govuk_items(form.postage)
+          }) }}
           {{ page_footer('Save') }}
         </div>
         <aside class="govuk-grid-column-three-quarters">

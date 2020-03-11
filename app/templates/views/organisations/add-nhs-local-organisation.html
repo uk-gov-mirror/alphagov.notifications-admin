@@ -5,6 +5,7 @@
 {% from "components/radios.html" import radios %}
 {% from "components/live-search.html" import live_search %}
 {% from "components/form.html" import form_wrapper %}
+{% from "components/radios/macro.njk" import govukRadios %}
 
 {% block per_page_title %}
   Accept our data sharing and financial agreement
@@ -20,7 +21,16 @@
       {{ form.organisations.label.text }}
     </p>
     {{ live_search(target_selector='.multiple-choice', show=True, form=search_form, label='Search by name') }}
-    {{ radios(form.organisations, hide_legend=True) }}
+    {{ govukRadios({
+      "name": form.organisations.name,
+      "fieldset": {
+        "legend": {
+          "text": form.organisations.label.text,
+          "classes": "govuk-visually-hidden"
+        }
+      },
+      "items": wtforms_option_fields_to_govuk_items(form.organisations)
+    }) }}
     {{ sticky_page_footer('Continue') }}
   {% endcall %}
 {% endblock %}

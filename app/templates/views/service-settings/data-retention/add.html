@@ -4,6 +4,7 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
 {% from "components/radios.html" import radios %}
+{% from "components/radios/macro.njk" import govukRadios %}
 
 {% block service_page_title %}
   Data retention
@@ -17,7 +18,15 @@
     ) }}
 
     {% call form_wrapper() %}
-      {{ radios(form.notification_type) }}
+      {{ govukRadios({
+        "name": form.notification_type.name,
+        "fieldset": {
+          "legend": {
+            "text": form.notification_type.label.text
+          }
+        },
+        "items": wtforms_option_fields_to_govuk_items(form.notification_type)
+      }) }}
       {{ textbox(form.days_of_retention) }}
       {{ page_footer('Add') }}
     {% endcall %}

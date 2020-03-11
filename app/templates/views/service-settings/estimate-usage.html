@@ -5,6 +5,7 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/radios.html" import radios %}
 {% from "components/textbox.html" import textbox %}
+{% from "components/radios/macro.njk" import govukRadios %}
 
 {% block service_page_title %}
   Tell us how many messages you expect to send
@@ -31,7 +32,18 @@
           {{ textbox(form.volume_sms, width='1-2', hint='For example, 50,000') }}
           {{ textbox(form.volume_letter, width='1-2', hint='For example, 50,000') }}
         </div>
-        {{ radios(form.consent_to_research, hint='You do not have to take part and you can unsubscribe at any time') }}
+        {{ govukRadios({
+          "name": form.consent_to_research.name,
+          "fieldset": {
+            "legend": {
+              "text": form.consent_to_research.label.text
+            }
+          },
+          "hint": {
+            "text": "You do not have to take part and you can unsubscribe at any time"
+          },
+          "items": wtforms_option_fields_to_govuk_items(form.consent_to_research)
+        }) }}
         {{ page_footer('Continue') }}
       {% endcall %}
     </div>

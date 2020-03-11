@@ -3,6 +3,7 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
+{% from "components/radios/macro.njk" import govukRadios %}
 
 {% block service_page_title %}
   Send international text messages
@@ -24,7 +25,15 @@
         of rates.
       </p>
       {% call form_wrapper() %}
-        {{ radios(form.enabled) }}
+        {{ govukRadios({
+          "name": form.enabled.name,
+          "fieldset": {
+            "legend": {
+              "text": form.enabled.label.text
+            }
+          },
+          "items": wtforms_option_fields_to_govuk_items(form.enabled)
+        }) }}
         {{ page_footer('Save') }}
       {% endcall %}
     </div>

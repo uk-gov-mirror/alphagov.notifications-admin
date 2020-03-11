@@ -2,6 +2,7 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/page-header.html" import page_header %}
 {% from "components/form.html" import form_wrapper %}
+{% from "components/radios/macro.njk" import govukRadios %}
 
 {% extends "org_template.html" %}
 
@@ -17,7 +18,18 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-five-sixths">
       {% call form_wrapper() %}
-        {{ radios(form.crown_status) }}
+        {{ govukRadios({
+          "name": form.crown_status.name,
+          "fieldset": {
+            "legend": {
+              "text": form.crown_status.label.text
+            }
+          },
+          "errorMessage": {
+            "text": form.crown_status.errors[0]
+          } if form.crown_status.errors else False,
+          "items": wtforms_option_fields_to_govuk_items(form.crown_status)
+        }) }}
         {{ page_footer('Save') }}
       {% endcall %}
     </div>

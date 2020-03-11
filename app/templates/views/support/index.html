@@ -2,6 +2,7 @@
 {% from "components/radios.html" import radios %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
+{% from "components/radios/macro.njk" import govukRadios %}
 
 {% block per_page_title %}
   Support
@@ -12,14 +13,37 @@
   <h1 class="heading-large">Support</h1>
   <p class="govuk-body">We provide 24-hour online support for teams with a live service on GOV.UK&nbsp;Notify.</p>
 
-  {% call form_wrapper() %}
+  {% call form_wrapper(class="bottom-gutter-2") %}
     {% if current_user.is_authenticated %}
-      {{ radios(form.support_type) }}
+      {{ govukRadios({
+        "name": form.support_type.name,
+        "fieldset": {
+          "legend": {
+            "text": form.support_type.label.text
+          }
+        },
+        "errorMessage": {
+          "text": form.support_type.errors[0]
+        } if form.support_type.errors else False,
+        "items": wtforms_option_fields_to_govuk_items(form.support_type)
+      }) }}
     {% else %}
       <p class="govuk-body">
         What do you need help with?
       </p>
-      {{ radios(form.who, hide_legend=True) }}
+      {{ govukRadios({
+        "name": form.who.name,
+        "fieldset": {
+          "legend": {
+            "text": form.who.label.text,
+            "classes": "govuk-visually-hidden"
+          }
+        },
+        "errorMessage": {
+          "text": form.who.errors[0]
+        } if form.who.errors else False,
+        "items": wtforms_option_fields_to_govuk_items(form.who)
+      }) }}
     {% endif %}
     {{ page_footer('Continue') }}
   {% endcall %}

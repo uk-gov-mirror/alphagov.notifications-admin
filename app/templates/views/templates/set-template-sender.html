@@ -3,6 +3,7 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
+{% from "components/radios/macro.njk" import govukRadios %}
 
 {% block service_page_title %}
   Set letter contact block
@@ -17,11 +18,22 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
       {% call form_wrapper() %}
-        {{ radios(
-          form.sender,
-          option_hints=option_hints,
-          hide_legend=True
-        ) }}
+        {% set items = wtforms_option_fields_to_govuk_items(form.sender) %}
+        {% for item in items %}
+          {% if option_hints[item["value"]] %}
+            {% set _ = item.update({ "hint": { "text": option_hints[item["value"]] } }) %}
+          {% endif %}
+        {% endfor %}
+        {{ govukRadios({
+          "name": form.sender.name,
+          "fieldset": {
+            "legend": {
+              "text": form.sender.label.text,
+              "classes": "govuk-visually-hidden"
+            }
+          },
+          "items": items
+        }) }}
         {{ page_footer('Continue') }}
         <a class="govuk-link govuk-link--no-visited-state" href="{{ url_for('.service_add_letter_contact', service_id=current_service.id, from_template=template_id) }}">Add new sender</a>
       {% endcall %}

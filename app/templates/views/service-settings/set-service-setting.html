@@ -3,6 +3,8 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
+{% from "components/radios/macro.njk" import govukRadios %}
+{% from "components/back-link/macro.njk" import govukBackLink %}
 
 {% block service_page_title %}
   {{ title }}
@@ -12,12 +14,23 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-five-sixths">
-      {{ page_header(
-        title,
-        back_link=url_for('.service_settings', service_id=current_service.id)
-      ) }}
+      {{ govukBackLink({
+        text: "Back",
+        href: url_for('.service_settings', service_id=current_service.id)
+      }) }}
       {% call form_wrapper() %}
-        {{ radios(form.enabled, hide_legend=True) }}
+        {{ govukRadios({
+          "name": form.enabled.name,
+          "fieldset": {
+            "classes": "govuk-!-margin-top-3",
+            "legend": {
+              "text": form.enabled.label.text,
+              "isPageHeading": True,
+              "classes": "govuk-fieldset__legend--l"
+            }
+          },
+          "items": wtforms_option_fields_to_govuk_items(form.enabled)
+        }) }}
         {{ page_footer('Save') }}
       {% endcall %}
     </div>

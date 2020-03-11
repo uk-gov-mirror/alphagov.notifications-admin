@@ -1,5 +1,6 @@
 {% from "components/radios.html" import radios, radios_nested %}
 {% from "components/page-footer.html" import page_footer %}
+{% from "components/radios/macro.njk" import govukRadios %}
 
 <div id="sticky_template_forms">
   <button type="submit" name="operation" value="unknown" hidden></button>
@@ -30,7 +31,18 @@
   </div>
   <div id="add_new_template_form">
     <div class="js-will-stick-at-bottom-when-scrolling">
-    {{ radios(templates_and_folders_form.add_template_by_template_type) }}
+    {{ govukRadios({
+      "name": templates_and_folders_form.add_template_by_template_type.name,
+      "fieldset": {
+        "legend": {
+          "text": templates_and_folders_form.add_template_by_template_type.label.text
+        }
+      },
+      "errorMessage": {
+        "text": templates_and_folders_form.add_template_by_template_type.errors[0]
+      } if templates_and_folders_form.add_template_by_template_type.errors else False,
+      "items": wtforms_option_fields_to_govuk_items(templates_and_folders_form.add_template_by_template_type)
+    }) }}
     </div>
     <div class="js-will-stick-at-bottom-when-scrolling">
     {{ page_footer('Continue', button_name='operation', button_value='add-new-template') }}

@@ -5,6 +5,7 @@
 {% from "components/textbox.html" import textbox %}
 {% from "components/radios.html" import radios %}
 {% from "components/form.html" import form_wrapper %}
+{% from "components/radios/macro.njk" import govukRadios %}
 
 {% block service_page_title %}
   {{ '{} email branding'.format('Update' if email_branding else 'Create')}}
@@ -32,7 +33,15 @@
           <div style='margin-top:15px;'>{{textbox(form.name)}}</div>
           <div style='margin-top:15px;'>{{textbox(form.text)}}</div>
           {{ textbox(form.colour, width='1-4', colour_preview=True) }}
-           {{ radios(form.brand_type) }}
+           {{ govukRadios({
+             "name": form.brand_type.name,
+             "fieldset": {
+               "legend": {
+                 "text": form.brand_type.label.text
+               }
+             },
+             "items": wtforms_option_fields_to_govuk_items(form.brand_type)
+          }) }}
           {{ page_footer(
             'Save',
             button_name='operation',

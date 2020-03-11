@@ -3,6 +3,7 @@
 {% from "components/page-header.html" import page_header %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/radios.html" import radios %}
+{% from "components/radios/macro.njk" import govukRadios %}
 
 {% block service_page_title %}
   Send emails
@@ -20,7 +21,15 @@
         It’s free to send emails through GOV.UK Notify.
       </p>
       {% call form_wrapper() %}
-        {{ radios(form.enabled) }}
+        {{ govukRadios({
+          "name": form.enabled.name,
+          "fieldset": {
+            "legend": {
+              "text": form.enabled.label.text
+            }
+          },
+          "items": wtforms_option_fields_to_govuk_items(form.enabled)
+        }) }}
         {{ page_footer('Save') }}
       {% endcall %}
     </div>

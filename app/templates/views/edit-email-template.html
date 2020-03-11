@@ -4,6 +4,7 @@
 {% from "components/page-footer.html" import sticky_page_footer %}
 {% from "components/radios.html" import radios %}
 {% from "components/form.html" import form_wrapper %}
+{% from "components/radios/macro.njk" import govukRadios %}
 
 {% block service_page_title %}
   {{ heading_action }} email template
@@ -23,7 +24,18 @@
           {{ textbox(form.subject, width='1-1', highlight_placeholders=True, rows=2) }}
           {{ textbox(form.template_content, highlight_placeholders=True, width='1-1', rows=8) }}
           {% if current_user.platform_admin %}
-             {{ radios(form.process_type) }}
+             {{ govukRadios({
+              "name": form.process_type.name,
+              "fieldset": {
+                "legend": {
+                  "text": form.process_type.label.text
+                }
+              },
+              "errorMessage": {
+                "text": form.process_type.errors[0]
+              } if form.process_type.errors else False,
+              "items": wtforms_option_fields_to_govuk_items(form.process_type)
+            }) }}
           {% endif %}
           {{ sticky_page_footer(
             'Save'

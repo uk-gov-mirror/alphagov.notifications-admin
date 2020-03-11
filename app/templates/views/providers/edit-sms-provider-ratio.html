@@ -4,6 +4,7 @@
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/form.html" import form_wrapper %}
 {% from "components/radios.html" import radios %}
+{% from "components/radios/macro.njk" import govukRadios %}
 
 {% block per_page_title %}
   Text message providers
@@ -31,7 +32,17 @@
             </div>
             {% call form_wrapper() %}
               <div class="radio-slider" data-module="radio-slider">
-                {{ radios(form.ratio, inline=True, hide_legend=True) }}
+                {{ govukRadios({
+                  "name": form.ratio.name,
+                  "classes": "govuk-radios--inline",
+                  "fieldset": {
+                    "legend": {
+                      "text": form.ratio.label.text,
+                      "classes": "govuk-visually-hidden"
+                    }
+                  },
+                  "items": wtforms_option_fields_to_govuk_items(form.ratio)
+                }) }}
                 <div class="radio-slider-left-value">
                   —
                 </div>

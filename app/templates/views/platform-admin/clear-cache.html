@@ -2,6 +2,7 @@
 {% from "components/form.html" import form_wrapper %}
 {% from "components/radios.html" import radios %}
 {% from "components/page-footer.html" import page_footer %}
+{% from "components/radios/macro.njk" import govukRadios %}
 
 {% block per_page_title %}
   Clear cache
@@ -14,7 +15,18 @@
   </h1>
 
   {% call form_wrapper() %}
-    {{ radios(form.model_type) }}
+    {{ govukRadios({
+      "name": form.model_type.name,
+      "fieldset": {
+        "legend": {
+          "text": form.model_type.label.text
+        }
+      },
+      "errorMessage": {
+        "text": form.model_type.errors[0]
+      } if form.model_type.errors else False,
+      "items": wtforms_option_fields_to_govuk_items(form.model_type)
+    }) }}
     {{ page_footer('Clear') }}
   {% endcall %}
 
