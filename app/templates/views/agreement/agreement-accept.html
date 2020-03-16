@@ -5,6 +5,7 @@
 {% from "components/form.html" import form_wrapper %}
 {% from "components/page-footer.html" import page_footer %}
 {% from "components/page-header.html" import page_header %}
+{% from "components/radios/macro.njk" import govukRadios %}
 
 {% block per_page_title %}
   Accept our data sharing and financial agreement
@@ -22,15 +23,31 @@
 
     {% call form_wrapper(class='top-gutter') %}
 
-      {% call select_wrapper(form.who) %}
-        {% for option in form.who %}
-          {{ radio(option, data_target='on-behalf-of' if option.data == 'someone-else' else None) }}
-        {% endfor %}
-      {% endcall %}
-      {% call conditional_radio_panel('on-behalf-of') %}
+      {% set items = wtforms_option_fields_to_govuk_items(form.who) %}
+      {% set conditional %}
         {{ textbox(form.on_behalf_of_name, width='1-1') }}
         {{ textbox(form.on_behalf_of_email, width='1-1') }}
-      {% endcall %}
+      {% endset %}
+      {% for item in items %}
+        {% if item["value"] == 'someone-else' %}
+          {% set _ = item.update({
+            "conditional": { "html": conditional }
+          }) %}
+        {% endif %}
+      {% endfor %}
+      {{ govukRadios({
+        "name": form.who.name,
+        "attributes": { "data-module": "radios" },
+        "fieldset": {
+          "legend": {
+            "text": form.who.label.text
+          }
+        },
+        "errorMessage": {
+          "text": form.who.errors[0]
+        } if form.who.errors else False,
+        "items": items
+      }) }}
       {{ textbox(form.version, width='1-3', hint='The version number is on the front page, for example ‘3.6’') }}
 
       {{ page_footer('Continue') }}

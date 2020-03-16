@@ -5,6 +5,7 @@
 {% from "components/radios.html" import radio %}
 {% from "components/select-input.html" import select_wrapper %}
 {% from "components/form.html" import form_wrapper %}
+{% from "components/radios/macro.njk" import govukRadios %}
 
 {% block service_page_title %}
   Send files by email
@@ -27,21 +28,25 @@
       <p class="govuk-body">
         You need to include contact details for your service so your users can get in touch if there’s a problem. For example, if the link to download the file you sent them has expired.
       </p>
-      {% call form_wrapper() %}
-
-        {% call select_wrapper(form.contact_details_type, hide_legend=true) %}
-          {% for option in form.contact_details_type %}
-            {% set data_target = option.data.replace('_', '-') ~ "-type" %}
-
-            {{ radio(option, data_target=data_target) }}
-            <div class="panel panel-border-narrow js-hidden" id={{data_target}}>
-              {{ textbox(form|attr(option.data), label=' ', width='1-1') }}
-            </div>
-          {% endfor %}
-        {% endcall %}
-
-        {{ page_footer('Save') }}
-      {% endcall %}
+      {% set items = wtforms_option_fields_to_govuk_items(form.contact_details_type) %}
+      {% for item in items %}
+        {% set conditional %}
+          {{ textbox(form|attr(item["value"]), label=' ', width='1-1') }}
+        {% endset %}
+        {% set _ = item.update({ "conditional": { "html": conditional } }) %}
+      {% endfor %}
+      {#- the govukRadios logic isn't adding the data-module attribute due to Jinja handling scoping differently to Nunjucks. Added here instead #}
+      {#- Added here to fix that #}
+      {{ govukRadios({
+        "name": form.contact_details_type.name,
+        "attributes": { "data-module": "radios" },
+        "fieldset": {
+          "legend": {
+            "text": form.contact_details_type.label.text
+          }
+        },
+        "items": items
+      }) }}
     </div>
   </div>
 {% endblock %}
