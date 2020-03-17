@@ -1,5 +1,6 @@
 {% from "components/radios.html" import radios, radios_nested %}
 {% from "components/page-footer.html" import page_footer %}
+{% from "components/radios.html" import notifyRadios %}
 {% from "components/radios/macro.njk" import govukRadios %}
 
 <div id="sticky_template_forms">
@@ -8,7 +9,18 @@
   {% if templates_and_folders_form.move_to.choices and template_list.templates_to_show %}
     <div id="move_to_folder_radios">
       <div class="js-will-stick-at-bottom-when-scrolling">
-      {{ radios_nested(templates_and_folders_form.move_to, move_to_children, option_hints=option_hints) }}
+      {% set move_to = get_tree_of_govuk_items_from_wtforms_option_fields(move_to_children[None], move_to_children) %}
+      {{ notifyRadios({
+        "name": templates_and_folders_form.move_to.name,
+        "fieldset": {
+          "legend": {
+            "text": templates_and_folders_form.move_to.label.text,
+            "classes": "govuk-fieldset__legend--s"
+          }
+        },
+        "asList": True,
+        "items": move_to
+      }) }}
       </div>
       <div class="js-will-stick-at-bottom-when-scrolling">
       {{ page_footer('Move', button_name='operation', button_value='move-to-existing-folder') }}
