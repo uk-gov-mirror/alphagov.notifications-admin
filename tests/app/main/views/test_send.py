@@ -71,8 +71,7 @@ def test_show_correct_title_and_description_for_email_sender_type(
 
     assert page.select_one('h1').text == 'Where should replies come back to?'
 
-    for element in ('legend', 'legend .govuk-visually-hidden'):
-        assert normalize_spaces(page.select_one(element).text) == 'Where should replies come back to?'
+    assert normalize_spaces(page.select_one('legend.govuk-visually-hidden').text) == 'Where should replies come back to?'
 
 
 def test_show_correct_title_and_description_for_sms_sender_type(
@@ -89,8 +88,7 @@ def test_show_correct_title_and_description_for_sms_sender_type(
 
     assert page.select_one('h1').text == 'Who should the message come from?'
 
-    for element in ('legend', 'legend .govuk-visually-hidden'):
-        assert normalize_spaces(page.select_one(element).text) == 'Who should the message come from?'
+    assert normalize_spaces(page.select_one('legend.govuk-visually-hidden').text) == 'Who should the message come from?'
 
 
 def test_default_email_sender_is_checked_and_has_hint(
@@ -105,9 +103,9 @@ def test_default_email_sender_is_checked_and_has_hint(
         template_id=fake_uuid
     )
 
-    assert page.select('.multiple-choice input')[0].has_attr('checked')
-    assert normalize_spaces(page.select_one('.multiple-choice label .block-label-hint').text) == "(Default)"
-    assert not page.select('.multiple-choice input')[1].has_attr('checked')
+    assert page.select('.govuk-radios__item input')[0].has_attr('checked')
+    assert normalize_spaces(page.select_one('.govuk-radios__item .govuk-hint').text) == "(Default)"
+    assert not page.select('.govuk-radios__item input')[1].has_attr('checked')
 
 
 def test_default_sms_sender_is_checked_and_has_hint(
@@ -122,9 +120,9 @@ def test_default_sms_sender_is_checked_and_has_hint(
         template_id=fake_uuid
     )
 
-    assert page.select('.multiple-choice input')[0].has_attr('checked')
-    assert normalize_spaces(page.select_one('.multiple-choice label .block-label-hint').text) == "(Default)"
-    assert not page.select('.multiple-choice input')[1].has_attr('checked')
+    assert page.select('.govuk-radios__item input')[0].has_attr('checked')
+    assert normalize_spaces(page.select_one('.govuk-radios__item .govuk-hint').text) == "(Default)"
+    assert not page.select('.govuk-radios__item input')[1].has_attr('checked')
 
 
 def test_default_sms_sender_is_checked_and_has_hint_when_there_are_no_inbound_numbers(
@@ -139,9 +137,9 @@ def test_default_sms_sender_is_checked_and_has_hint_when_there_are_no_inbound_nu
         template_id=fake_uuid
     )
 
-    assert page.select('.multiple-choice input')[0].has_attr('checked')
-    assert normalize_spaces(page.select_one('.multiple-choice label .block-label-hint').text) == "(Default)"
-    assert not page.select('.multiple-choice input')[1].has_attr('checked')
+    assert page.select('.govuk-radios__item input')[0].has_attr('checked')
+    assert normalize_spaces(page.select_one('.govuk-radios__item .govuk-hint').text) == "(Default)"
+    assert not page.select('.govuk-radios__item input')[1].has_attr('checked')
 
 
 def test_default_inbound_sender_is_checked_and_has_hint_with_default_and_receives_text(
@@ -157,11 +155,11 @@ def test_default_inbound_sender_is_checked_and_has_hint_with_default_and_receive
         template_id=fake_uuid
     )
 
-    assert page.select('.multiple-choice input')[0].has_attr('checked')
+    assert page.select('.govuk-radios__item input')[0].has_attr('checked')
     assert normalize_spaces(
-        page.select_one('.multiple-choice label .block-label-hint').text) == "(Default and receives replies)"
-    assert not page.select('.multiple-choice input')[1].has_attr('checked')
-    assert not page.select('.multiple-choice input')[2].has_attr('checked')
+        page.select_one('.govuk-radios__item .govuk-hint').text) == "(Default and receives replies)"
+    assert not page.select('.govuk-radios__item input')[1].has_attr('checked')
+    assert not page.select('.govuk-radios__item input')[2].has_attr('checked')
 
 
 def test_sms_sender_has_receives_replies_hint(
@@ -177,11 +175,11 @@ def test_sms_sender_has_receives_replies_hint(
         template_id=fake_uuid
     )
 
-    assert page.select('.multiple-choice input')[0].has_attr('checked')
+    assert page.select('.govuk-radios__item input')[0].has_attr('checked')
     assert normalize_spaces(
-        page.select_one('.multiple-choice label .block-label-hint').text) == "(Default and receives replies)"
-    assert not page.select('.multiple-choice input')[1].has_attr('checked')
-    assert not page.select('.multiple-choice input')[2].has_attr('checked')
+        page.select_one('.govuk-radios__item .govuk-hint').text) == "(Default and receives replies)"
+    assert not page.select('.govuk-radios__item input')[1].has_attr('checked')
+    assert not page.select('.govuk-radios__item input')[2].has_attr('checked')
 
 
 @pytest.mark.parametrize('template_type, sender_data', [

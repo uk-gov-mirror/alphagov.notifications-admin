@@ -3740,7 +3740,7 @@ def test_show_international_sms_as_radio_button(
         'main.service_set_international_sms',
         service_id=service_one['id'],
     ).select(
-        '.multiple-choice input[checked]'
+        '.govuk-radios__item input[checked]'
     )
 
     assert len(checked_radios) == 1
@@ -4093,7 +4093,7 @@ def test_send_files_by_email_contact_details_displays_error_message_when_no_radi
         },
         _follow_redirects=True
     )
-    assert normalize_spaces(page.find('span', class_='error-message').text) == 'Select an option'
+    assert normalize_spaces(page.find('span', class_='govuk-error-message').text).replace('Error: ', '') == 'Not a valid choice'
     assert normalize_spaces(page.h1.text) == "Send files by email"
 
 
@@ -4431,7 +4431,7 @@ def test_show_branding_request_page_when_no_branding_is_set(
             for radio in page.select('input[type=radio]')
         ] == expected_options
         assert page.select_one(
-            '.conditional-radios-panel#panel-something-else textarea'
+            '.govuk-radios__conditional#something-else-2 textarea'
         )['name'] == (
             'something_else'
         )
@@ -4441,7 +4441,7 @@ def test_show_branding_request_page_when_no_branding_is_set(
         )['name'] == (
             'something_else'
         )
-        assert not page.select('.conditional-radios-panel')
+        assert not page.select('.govuk-radios__conditional')
 
 
 @pytest.mark.parametrize('branding_type', ['email', 'letter'])

@@ -244,7 +244,7 @@ def test_should_show_create_api_key_page(
     page = client_request.get('main.create_api_key', service_id=SERVICE_ONE_ID)
 
     for index, option in enumerate(expected_options):
-        assert normalize_spaces(page.select('.block-label')[index].text) == option
+        assert normalize_spaces(page.select('.govuk-radios__item')[index].text) == option
 
 
 def test_should_create_api_key_with_type_normal(

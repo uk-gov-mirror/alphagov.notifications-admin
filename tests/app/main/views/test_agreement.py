@@ -218,16 +218,16 @@ def test_show_accept_agreement_page(
     )
     assert page.select('input[name=who]')[0]['value'] == 'me'
     assert 'checked' not in page.select('input[name=who]')[0]
-    assert 'data-target' not in page.select('.multiple-choice')[0]
+    assert 'aria-controls' not in page.select('.govuk-radios__input')[0]
     assert normalize_spaces(page.select_one('label[for=who-1]').text) == (
         'Someone else'
     )
     assert page.select('input[name=who]')[1]['value'] == 'someone-else'
     assert 'checked' not in page.select('input[name=who]')[1]
-    assert page.select('.multiple-choice')[1]['data-target'] == 'on-behalf-of'
+    assert page.select('.govuk-radios__input')[1]['aria-controls'] == 'on-behalf-of'
     assert [
         field['name']
-        for field in page.select('#on-behalf-of.conditional-radios-panel input')
+        for field in page.select('#on-behalf-of.govuk-radios__conditional input')
     ] == [
         'on_behalf_of_name', 'on_behalf_of_email'
     ]
@@ -278,7 +278,7 @@ def test_accept_agreement_page_populates(
             'on_behalf_of_email': '',
         },
         [
-            'Select an option',
+            'Not a valid choice',
             'Must be a number',
         ],
     ),
@@ -342,8 +342,9 @@ def test_accept_agreement_page_validates(
         _data=data,
         _expected_status=200,
     )
+    # GOVUK Frontend errors are prefixed with 'Error: '
     assert [
-        error.text.strip() for error in page.select('.error-message')
+        error.text.replace('Error:', '').strip() for error in page.select('.govuk-error-message, .error-message')
     ] == expected_errors
 
 
