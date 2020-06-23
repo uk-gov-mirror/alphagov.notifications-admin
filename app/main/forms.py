@@ -527,7 +527,7 @@ class RegisterUserFromOrgInviteForm(StripWhitespaceForm):
     auth_type = HiddenField('auth_type', validators=[DataRequired()])
 
 
-class govukCheckboxesMixin:
+class govukMultiOptionMixin:
 
     def extend_params(self, params, extensions):
         items = None
@@ -553,7 +553,7 @@ class govukCheckboxesMixin:
                         params['items'][idx].update(items[idx])
 
 
-class govukCheckboxField(govukCheckboxesMixin, BooleanField):
+class govukCheckboxField(govukMultiOptionMixin, BooleanField):
 
     def __init__(self, label='', validators=None, param_extensions=None, **kwargs):
         super(govukCheckboxField, self).__init__(label, validators, false_values=None, **kwargs)
@@ -598,7 +598,7 @@ class govukCheckboxField(govukCheckboxesMixin, BooleanField):
 
 
 # based on work done by @richardjpope: https://github.com/richardjpope/recourse/blob/master/recourse/forms.py#L6
-class govukCheckboxesField(govukCheckboxesMixin, SelectMultipleField):
+class govukCheckboxesField(govukMultiOptionMixin, SelectMultipleField):
 
     render_as_list = False
 
