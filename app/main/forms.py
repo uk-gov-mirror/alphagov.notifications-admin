@@ -597,6 +597,73 @@ class govukCheckboxField(govukMultiOptionMixin, BooleanField):
             render_template('forms/fields/checkboxes/macro.njk', params=params))
 
 
+class govukRadioField(govukMultiOptionMixin, RadioField):
+
+    render_as_list = False
+
+    def __init__(self, label='', validators=None, param_extensions=None, **kwargs):
+        super(govukCheckboxesField, self).__init__(label, validators, **kwargs)
+        self.param_extensions = param_extensions
+
+    def get_item_from_option(self, option):
+        return {
+            "name": option.name,
+            "id": option.id,
+            "text": option.label.text,
+            "value": str(option.data),  # to protect against non-string types like uuids
+            "checked": option.checked
+        }
+
+    def get_items_from_options(self, field):
+        return [self.get_item_from_option(option) for option in field]
+
+    def process_formdata(self, valuelist):
+        if valuelist == []:
+            self.data = False
+        else:
+            self.data = valuelist[0]
+
+    # self.__call__ renders the HTML for the field by:
+    # 1. delegating to self.meta.render_field which
+    # 2. calls field.widget
+    # this bypasses that by making self.widget a method with the same interface as widget.__call__
+    def widget(self, field, param_extensions=None, **kwargs):
+
+        # error messages
+        error_message = None
+        if field.errors:
+            error_message = {"text": " ".join(field.errors).strip()}
+
+        # returns either a list or a hierarchy of lists
+        # depending on how get_items_from_options is implemented
+        items = self.get_items_from_options(field)
+
+        params = {
+            'name':  field.name,
+            "fieldset": {
+                "attributes": {"id": field.name},
+                "legend": {
+                    "text": field.label.text,
+                    "classes": "govuk-fieldset__legend--s"
+                }
+            },
+            "asList": self.render_as_list,
+            'errorMessage': error_message,
+            'items': items
+        }
+
+        # extend default params with any sent in during instantiation
+        if self.param_extensions:
+            self.extend_params(params, self.param_extensions)
+
+        # add any sent in though use in templates
+        if param_extensions:
+            self.extend_params(params, param_extensions)
+
+        return Markup(
+            render_template('forms/fields/checkboxes/macro.njk', params=params))
+
+
 # based on work done by @richardjpope: https://github.com/richardjpope/recourse/blob/master/recourse/forms.py#L6
 class govukCheckboxesField(govukMultiOptionMixin, SelectMultipleField):
 
