@@ -1074,7 +1074,7 @@ class BaseTemplateForm(StripWhitespaceForm):
             NoCommasInPlaceHolders()
         ]
     )
-    process_type = RadioField(
+    process_type = govukRadioField(
         'Use priority queue?',
         choices=[
             ('priority', 'Yes'),
