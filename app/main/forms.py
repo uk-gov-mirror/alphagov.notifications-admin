@@ -601,8 +601,11 @@ class govukRadioField(govukMultiOptionMixin, RadioField):
 
     render_as_list = False
 
-    def __init__(self, label='', validators=None, param_extensions=None, **kwargs):
-        super(govukCheckboxesField, self).__init__(label, validators, **kwargs)
+    def __init__(self, label='', validators=None, thing=None, param_extensions=None, **kwargs):
+        if thing is not None:
+            super(govukRadioField, self).__init__(label, validators, thing=thing, **kwargs)
+        else:
+            super(govukRadioField, self).__init__(label, validators, **kwargs)
         self.param_extensions = param_extensions
 
     def get_item_from_option(self, option):
