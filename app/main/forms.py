@@ -1517,7 +1517,7 @@ class ServiceUpdateEmailBranding(StripWhitespaceForm):
         ]
     )
     file = FileField_wtf('Upload a PNG logo', validators=[FileAllowed(['png'], 'PNG Images only!')])
-    brand_type = RadioField(
+    brand_type = govukRadioField(
         "Brand type",
         choices=[
             ('both', 'GOV.UK and branding'),

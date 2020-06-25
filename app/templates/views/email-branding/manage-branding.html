@@ -33,15 +33,7 @@
           <div style='margin-top:15px;'>{{textbox(form.name)}}</div>
           <div style='margin-top:15px;'>{{textbox(form.text)}}</div>
           {{ textbox(form.colour, width='1-4', colour_preview=True) }}
-           {{ govukRadios({
-             "name": form.brand_type.name,
-             "fieldset": {
-               "legend": {
-                 "text": form.brand_type.label.text
-               }
-             },
-             "items": wtforms_option_fields_to_govuk_items(form.brand_type)
-          }) }}
+          {{ form.brand_type }}
           {{ page_footer(
             'Save',
             button_name='operation',
