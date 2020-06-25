@@ -21,16 +21,7 @@
       {{ form.organisations.label.text }}
     </p>
     {{ live_search(target_selector='.multiple-choice', show=True, form=search_form, label='Search by name') }}
-    {{ govukRadios({
-      "name": form.organisations.name,
-      "fieldset": {
-        "legend": {
-          "text": form.organisations.label.text,
-          "classes": "govuk-visually-hidden"
-        }
-      },
-      "items": wtforms_option_fields_to_govuk_items(form.organisations)
-    }) }}
+    {{ form.organisations }}
     {{ sticky_page_footer('Continue') }}
   {% endcall %}
 {% endblock %}
