@@ -83,21 +83,27 @@ def api_keys(service_id):
 @main.route("/services/<uuid:service_id>/api/keys/create", methods=['GET', 'POST'])
 @user_has_permissions('manage_api_keys', restrict_admin_usage=True)
 def create_api_key(service_id):
-    form = CreateKeyForm(current_service.api_keys)
-    form.key_type.choices = [
+    key_types = [
         (KEY_TYPE_NORMAL, 'Live – sends to anyone'),
         (KEY_TYPE_TEAM, 'Team and guest list – limits who you can send to'),
         (KEY_TYPE_TEST, 'Test – pretends to send messages'),
     ]
-    disabled_options, option_hints = [], {}
+    key_type_formatting = []
     if current_service.trial_mode:
-        disabled_options = [KEY_TYPE_NORMAL]
-        option_hints[KEY_TYPE_NORMAL] = Markup(
-            'Not available because your service is in '
-            '<a class="govuk-link govuk-link--no-visited-state" href="/features/trial-mode">trial mode</a>'
-        )
+        # add for KEY_TYPE_NORMAL
+        key_type_formatting.append({
+            "disabled": True,
+            "hint": {"html": Markup(
+                'Not available because your service is in '
+                '<a class="govuk-link govuk-link--no-visited-state" href="/features/trial-mode">trial mode</a>')
+            }
+        })
     if current_service.has_permission('letter'):
-        option_hints[KEY_TYPE_TEAM] = 'Cannot be used to send letters'
+        # add for KEY_TYPE_TEAM
+        key_type_formatting.append({'hint': {'html': 'Cannot be used to send letters'}})
+    form = CreateKeyForm(current_service.api_keys)
+    form.key_type.choices = key_types
+    form.key_type.param_extensions = {"items": key_type_formatting}
     if form.validate_on_submit():
         if form.key_type.data in disabled_options:
             abort(400)
@@ -114,9 +120,7 @@ def create_api_key(service_id):
         )
     return render_template(
         'views/api/keys/create.html',
-        form=form,
-        disabled_options=disabled_options,
-        option_hints=option_hints
+        form=form
     )
 
 

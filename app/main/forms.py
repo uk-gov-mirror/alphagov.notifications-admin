@@ -1267,9 +1267,9 @@ class CreateKeyForm(StripWhitespaceForm):
         ]
         super().__init__(*args, **kwargs)
 
-    key_type = RadioField(
+    key_type = govukRadioField(
         'Type of key',
-        thing='the type of key',
+        thing='the type of key'
     )
 
     key_name = StringField(u'Description of key', validators=[

@@ -20,27 +20,7 @@
 
   {% call form_wrapper() %}
     {{ textbox(form.key_name, label='Name for this key') }}
-    {% set items = wtforms_option_fields_to_govuk_items(form.key_type) %}
-    {% for item in items %}
-      {% if item.value in option_hints.keys() %}
-        {% set _ = item.update({ "hint": { "html": option_hints[item.value] } }) %}
-      {% endif %}
-      {% if item.value in disabled_options %}
-        {% set _ = item.update({ "disabled": True }) %}
-      {% endif %}
-    {% endfor %}
-    {{ govukRadios({
-      "name": form.key_type.name,
-      "fieldset": {
-        "legend": {
-          "text": form.key_type.label.text
-        }
-      },
-      "errorMessage": {
-        "text": form.key_type.errors[0]
-      } if form.key_type.errors else False,
-      "items": items
-    }) }}
+    {{ form.key_type }}
     {{ page_footer('Continue') }}
   {% endcall %}
 
