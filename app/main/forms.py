@@ -566,6 +566,10 @@ class OnOffField(RadioField):
             )
 
 
+class govukOnOffField(OnOffField, govukRadioField):
+    pass
+
+
 class LoginForm(StripWhitespaceForm):
     email_address = EmailField('Email address', validators=[
         Length(min=5, max=255),
@@ -1455,7 +1459,7 @@ class ServiceOnOffSettingForm(StripWhitespaceForm):
             (False, falsey),
         ]
 
-    enabled = OnOffField('Choices')
+    enabled = govukOnOffField('Choices')
 
 
 class ServiceSwitchChannelForm(ServiceOnOffSettingForm):
