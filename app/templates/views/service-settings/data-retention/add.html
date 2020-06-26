@@ -18,15 +18,7 @@
     ) }}
 
     {% call form_wrapper() %}
-      {{ govukRadios({
-        "name": form.notification_type.name,
-        "fieldset": {
-          "legend": {
-            "text": form.notification_type.label.text
-          }
-        },
-        "items": wtforms_option_fields_to_govuk_items(form.notification_type)
-      }) }}
+      {{ form.notification_type }}
       {{ textbox(form.days_of_retention) }}
       {{ page_footer('Add') }}
     {% endcall %}

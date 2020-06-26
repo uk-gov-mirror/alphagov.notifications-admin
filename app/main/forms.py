@@ -1889,7 +1889,7 @@ class BrandingOptions(StripWhitespaceForm):
 
 class ServiceDataRetentionForm(StripWhitespaceForm):
 
-    notification_type = RadioField(
+    notification_type = govukRadioField(
         'What notification type?',
         choices=[
             ('email', 'Email'),
