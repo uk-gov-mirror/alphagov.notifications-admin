@@ -408,6 +408,10 @@ class RadioFieldWithNoneOption(FieldWithNoneOption, RadioField):
     pass
 
 
+class govukRadioFieldWithNoneOption(FieldWithNoneOption, govukRadioField):
+    pass
+
+
 class NestedFieldMixin:
 
     def children(self):
