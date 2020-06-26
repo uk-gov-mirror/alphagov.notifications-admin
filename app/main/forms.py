@@ -966,10 +966,8 @@ class OrganisationOrganisationTypeForm(StripWhitespaceForm):
 
 
 class OrganisationCrownStatusForm(StripWhitespaceForm):
-    crown_status = RadioField(
-        (
-            'Is this organisation a crown body?'
-        ),
+    crown_status = govukRadioField(
+        'Is this organisation a crown body?',
         choices=[
             ('crown', 'Yes'),
             ('non-crown', 'No'),
