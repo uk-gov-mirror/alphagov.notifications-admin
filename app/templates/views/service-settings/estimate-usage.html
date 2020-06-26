@@ -32,26 +32,7 @@
           {{ textbox(form.volume_sms, width='1-2', hint='For example, 50,000') }}
           {{ textbox(form.volume_letter, width='1-2', hint='For example, 50,000') }}
         </div>
-        {{ govukRadios({
-          "name": form.consent_to_research.name,
-          "fieldset": {
-            "legend": {
-              "text": form.consent_to_research.label.text
-            }
-          },
-          "hint": {
-            "text": "You do not have to take part and you can unsubscribe at any time"
-          },
-          "errorMessage": {
-            "text": form.consent_to_research.errors[0],
-            "attributes": {
-              "data-module": "track-error",
-              "data-error-type": form.consent_to_research.errors[0],
-              "data-error-label": form.consent_to_research.name
-            }
-          } if form.consent_to_research.errors else False,
-          "items": wtforms_option_fields_to_govuk_items(form.consent_to_research)
-        }) }}
+        {{ form.consent_to_research }}
         {{ page_footer('Continue') }}
       {% endcall %}
     </div>
