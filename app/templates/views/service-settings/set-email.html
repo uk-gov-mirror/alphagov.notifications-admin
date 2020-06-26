@@ -21,15 +21,7 @@
         It’s free to send emails through GOV.UK Notify.
       </p>
       {% call form_wrapper() %}
-        {{ govukRadios({
-          "name": form.enabled.name,
-          "fieldset": {
-            "legend": {
-              "text": form.enabled.label.text
-            }
-          },
-          "items": wtforms_option_fields_to_govuk_items(form.enabled)
-        }) }}
+        {{ form.enabled }}
         {{ page_footer('Save') }}
       {% endcall %}
     </div>
