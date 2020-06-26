@@ -18,28 +18,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-five-sixths">
       {% call form_wrapper() %}
-        {% set items = wtforms_option_fields_to_govuk_items(form.agreement_signed) %}
-        {% set hints = {
-            "yes": "Users will be told their organisation has already signed the agreement",
-            "no": "Users will be prompted to sign the agreement before they can go live",
-            "unknown": "Users will not be prompted to sign the agreement"
-          }
-        %}
-        {% for item in items %}
-          {% set _ = item.update({ "hint": { "text": hints[item.value] } }) %}
-        {% endfor %}
-        {{ govukRadios({
-          "name": form.agreement_signed.name,
-          "fieldset": {
-            "legend": {
-              "text": form.agreement_signed.label.text
-            }
-          },
-          "errorMessage": {
-            "text": form.agreement_signed.errors[0]
-          } if form.agreement_signed.errors else False,
-          "items": items
-        }) }}
+        {{ form.agreement_signed }}
         {{ page_footer('Save') }}
       {% endcall %}
     </div>
