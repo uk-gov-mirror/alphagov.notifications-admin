@@ -1721,7 +1721,7 @@ class ServiceDeliveryStatusCallbackForm(CallbackForm):
 
 
 class InternationalSMSForm(StripWhitespaceForm):
-    enabled = RadioField(
+    enabled = govukRadioField(
         'Send text messages to international phone numbers',
         choices=[
             ('on', 'On'),
