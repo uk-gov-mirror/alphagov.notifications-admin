@@ -21,18 +21,7 @@
     <p class="govuk-body"> No available inbound numbers </p>
     {% else %}
     {% call form_wrapper() %}
-      {{ govukRadios({
-        "name": form.inbound_number.name,
-        "fieldset": {
-          "legend": {
-            "text": form.inbound_number.label.text
-          }
-        },
-        "errorMessage": {
-          "text": form.inbound_number.errors[0]
-        } if form.inbound_number.errors else False,
-        "items": wtforms_option_fields_to_govuk_items(form.inbound_number)
-      }) }}
+      {{ form.inbound_number }}
       {{ sticky_page_footer('Save') }}
   {% endcall %}
 {% endif %}

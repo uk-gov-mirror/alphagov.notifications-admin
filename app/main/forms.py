@@ -1682,7 +1682,7 @@ class ServiceInboundNumberForm(StripWhitespaceForm):
         super().__init__(*args, **kwargs)
         self.inbound_number.choices = kwargs['inbound_number_choices']
 
-    inbound_number = RadioField(
+    inbound_number = govukRadioField(
         "Select your inbound number",
         thing='an inbound number',
     )
