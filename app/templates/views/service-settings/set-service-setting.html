@@ -19,17 +19,14 @@
         href: url_for('.service_settings', service_id=current_service.id)
       }) }}
       {% call form_wrapper() %}
-        {{ govukRadios({
-          "name": form.enabled.name,
+        {{ form.enabled(param_extensions={
           "fieldset": {
             "classes": "govuk-!-margin-top-3",
             "legend": {
-              "text": form.enabled.label.text,
               "isPageHeading": True,
               "classes": "govuk-fieldset__legend--l"
             }
-          },
-          "items": wtforms_option_fields_to_govuk_items(form.enabled)
+          }
         }) }}
         {{ page_footer('Save') }}
       {% endcall %}
