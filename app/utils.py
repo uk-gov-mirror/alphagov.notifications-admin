@@ -801,3 +801,39 @@ def hide_from_search_engines(f):
         response.headers['X-Robots-Tag'] = 'noindex'
         return response
     return decorated_function
+
+
+# Function to merge two dict or lists with a JSON-like structure into one.
+# JSON-like means they can contain all types JSON can: all the main primitives
+# plus nested lists or dictionaries.
+# Merge is additive. New values overwrite old and collections are added to.
+def merge_jsonlike(src, dest):
+    def merge_items(srcItem, destItem):
+        if isinstance(srcItem, dict) and isinstance(destItem, dict):
+            merge_dicts(srcItem, destItem)
+        elif isinstance(srcItem, list) and isinstance(destItem, list):
+            merge_lists(srcItem, destItem)
+        else: # primitive value
+            return False
+        return True
+
+    def merge_lists(src, dest):
+        for index, item in enumerate(dest):
+            # append new items
+            if index >= len(src):
+                src.append(item)
+            else:
+                # assign dest value if can't be merged into src
+                if merge_items(src[index], item) == False:
+                    src[index] = item
+
+    def merge_dicts(src, dest):
+        for key, val in dest.items():
+            if key in src:
+                # assign dest value if can't be merged into src
+                if merge_items(src[key], val) == False:
+                    src[key] = val
+            else:
+                src[key] = val
+
+    merge_items(src, dest)

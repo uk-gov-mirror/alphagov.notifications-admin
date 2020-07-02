@@ -55,7 +55,7 @@ from app.main.validators import (
 from app.models.feedback import PROBLEM_TICKET_TYPE, QUESTION_TICKET_TYPE
 from app.models.organisation import Organisation
 from app.models.roles_and_permissions import permissions, roles
-from app.utils import guess_name_from_email_address
+from app.utils import guess_name_from_email_address, merge_jsonlike
 
 
 def get_time_value_and_label(future_time):
@@ -271,27 +271,7 @@ class ForgivingIntegerField(StringField):
 class govukMultiOptionMixin:
 
     def extend_params(self, params, extensions):
-        items = None
-        param_items = len(params['items']) if 'items' in params else 0
-
-        # split items off from params to make it a pure dict
-        if 'items' in extensions:
-            items = extensions['items']
-            del extensions['items']
-
-        # merge dicts
-        params.update(extensions)
-
-        # merge items
-        if items:
-            if 'items' not in params:
-                params['items'] = items
-            else:
-                for idx, _item in enumerate(items):
-                    if idx >= param_items:
-                        params['items'].append(items[idx])
-                    else:
-                        params['items'][idx].update(items[idx])
+        return merge_jsonlike(params, extensions)
 
 
 class govukRadioField(govukMultiOptionMixin, RadioField):
