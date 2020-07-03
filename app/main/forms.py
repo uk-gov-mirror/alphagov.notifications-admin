@@ -1731,7 +1731,7 @@ class InternationalSMSForm(StripWhitespaceForm):
 
 
 class SMSPrefixForm(StripWhitespaceForm):
-    enabled = RadioField(
+    enabled = govukRadioField(
         '',
         choices=[
             ('on', 'On'),
