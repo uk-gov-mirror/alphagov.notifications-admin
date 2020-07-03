@@ -1285,7 +1285,7 @@ class CreateKeyForm(StripWhitespaceForm):
 
 
 class SupportType(StripWhitespaceForm):
-    support_type = RadioField(
+    support_type = govukRadioField(
         'How can we help you?',
         choices=[
             (PROBLEM_TICKET_TYPE, 'Report a problem'),
@@ -1295,12 +1295,15 @@ class SupportType(StripWhitespaceForm):
 
 
 class SupportRedirect(StripWhitespaceForm):
-    who = RadioField(
+    who = govukRadioField(
         'What do you need help with?',
         choices=[
             ('public-sector', 'I work in the public sector and need to send emails, text messages or letters'),
             ('public', 'I’m a member of the public with a question for the government'),
         ],
+        param_extensions={
+            "fieldset": {"legend": {"classes": "govuk-visually-hidden"}}
+        }
     )
 
 

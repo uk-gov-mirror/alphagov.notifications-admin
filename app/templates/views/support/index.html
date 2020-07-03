@@ -15,35 +15,12 @@
 
   {% call form_wrapper(class="bottom-gutter-2") %}
     {% if current_user.is_authenticated %}
-      {{ govukRadios({
-        "name": form.support_type.name,
-        "fieldset": {
-          "legend": {
-            "text": form.support_type.label.text
-          }
-        },
-        "errorMessage": {
-          "text": form.support_type.errors[0]
-        } if form.support_type.errors else False,
-        "items": wtforms_option_fields_to_govuk_items(form.support_type)
-      }) }}
+      {{ form.support_type }}
     {% else %}
       <p class="govuk-body">
         What do you need help with?
       </p>
-      {{ govukRadios({
-        "name": form.who.name,
-        "fieldset": {
-          "legend": {
-            "text": form.who.label.text,
-            "classes": "govuk-visually-hidden"
-          }
-        },
-        "errorMessage": {
-          "text": form.who.errors[0]
-        } if form.who.errors else False,
-        "items": wtforms_option_fields_to_govuk_items(form.who)
-      }) }}
+      {{ form.who }}
     {% endif %}
     {{ page_footer('Continue') }}
   {% endcall %}
