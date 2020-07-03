@@ -1158,7 +1158,7 @@ class LetterTemplateForm(EmailTemplateForm):
 
 
 class LetterTemplatePostageForm(StripWhitespaceForm):
-    postage = RadioField(
+    postage = govukRadioField(
         'Choose the postage for this letter template',
         choices=[
             ('first', 'First class'),
