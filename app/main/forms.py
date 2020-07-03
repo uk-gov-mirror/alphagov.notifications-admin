@@ -1314,7 +1314,7 @@ class FeedbackOrProblem(StripWhitespaceForm):
 
 
 class Triage(StripWhitespaceForm):
-    severe = RadioField(
+    severe = govukRadioField(
         'Is it an emergency?',
         choices=[
             ('yes', 'Yes'),

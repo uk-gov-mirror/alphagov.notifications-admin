@@ -18,18 +18,7 @@
         back_link=url_for('.support')
       ) }}
       {% call form_wrapper() %}
-        {{ govukRadios({
-          "name": form.severe.name,
-          "fieldset": {
-            "legend": {
-              "text": form.severe.label.text
-            }
-          },
-          "errorMessage": {
-            "text": form.severe.errors[0]
-          } if form.severe.errors else False,
-          "items": wtforms_option_fields_to_govuk_items(form.severe)
-        }) }}
+        {{ form.severe }}
         {{ page_footer('Continue') }}
       {% endcall %}
       <h2 class="heading-small">
