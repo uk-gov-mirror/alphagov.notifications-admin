@@ -270,8 +270,26 @@ class ForgivingIntegerField(StringField):
 
 class govukMultiOptionMixin:
 
+    # caches changes to individual items prior to rendering (via extend_param_items)
+    _item_extensions = None
+
     def extend_params(self, params, extensions):
-        return merge_jsonlike(params, extensions)
+        merge_jsonlike(params, extensions)
+
+    def extend_param_items(self, params):
+        if self._item_extensions is not None:
+            for item in params['items']:
+                if item['value'] in self._item_extensions:
+                    merge_jsonlike(item, self._item_extensions[item['value']])
+
+    def extend_param_item_by_value(self, value=None, extensions=None):
+        if not self._item_extensions:
+            self._item_extensions = {}
+
+        if value not in self._item_extensions:
+            self._item_extensions[value] = extensions
+        else:
+            self._item_extensions[value] = merge_jsonlike(self._item_extensions[value], extensions)
 
 
 class govukRadioField(govukMultiOptionMixin, RadioField):
@@ -332,13 +350,16 @@ class govukRadioField(govukMultiOptionMixin, RadioField):
             'items': items
         }
 
-        # extend default params with any sent in during instantiation
+        # extend default params with any changes added before rendering
         if self.param_extensions:
             self.extend_params(params, self.param_extensions)
 
         # add any sent in though use in templates
         if param_extensions:
             self.extend_params(params, param_extensions)
+
+        # add any targeting individual items
+        self.extend_param_items(params)
 
         return Markup(
             render_template('forms/fields/radios/template.njk', params=params))
