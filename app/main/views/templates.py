@@ -775,7 +775,7 @@ def set_template_sender(service_id, template_id):
         sender=sender_details['current_choice'],
         sender_choices=sender_details['value_and_label'],
     )
-    option_hints = {sender_details['default_sender']: '(Default)'}
+    form.sender.extend_param_item_by_value(sender_details['default_sender'], {'hint': {'text': '(Default)'}})
 
     if form.validate_on_submit():
         service_api_client.update_service_template_sender(
@@ -789,8 +789,7 @@ def set_template_sender(service_id, template_id):
         'views/templates/set-template-sender.html',
         form=form,
         template_id=template_id,
-        no_senders=no_senders,
-        option_hints=option_hints
+        no_senders=no_senders
     )
 
 
