@@ -228,11 +228,16 @@ def set_sender(service_id, template_id):
         sender_choices=sender_context['value_and_label'],
         sender_label=sender_context['description']
     )
+    form.sender.extend_param_item_by_value(
+        value=sender_context['default_id'], extensions={'hint': {'text': '(Default)'}})
     option_hints = {sender_context['default_id']: '(Default)'}
     if sender_context.get('receives_text_message', None):
-        option_hints.update({sender_context['receives_text_message']: '(Receives replies)'})
+        form.sender.extend_param_item_by_value(
+            value=sender_context['receives_text_message'], extensions={'hint': {'text': '(Receives replies)'}})
     if sender_context.get('default_and_receives', None):
-        option_hints = {sender_context['default_and_receives']: '(Default and receives replies)'}
+        form.sender.extend_param_item_by_value(
+            value=sender_context['default_and_receives'],
+            extensions={'hint': {'text': '(Default and receives replies)'}})
 
     if form.validate_on_submit():
         session['sender_id'] = form.sender.data
@@ -245,7 +250,6 @@ def set_sender(service_id, template_id):
         form=form,
         template_id=template_id,
         sender_context={'title': sender_context['title'], 'description': sender_context['description']},
-        option_hints=option_hints
     )
 
 

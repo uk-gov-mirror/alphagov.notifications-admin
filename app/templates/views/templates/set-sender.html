@@ -19,22 +19,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
       {% call form_wrapper() %}
-        {% set items = wtforms_option_fields_to_govuk_items(form.sender) %}
-        {% for item in items %}
-          {% if option_hints[item["value"]] %}
-            {% set _ = item.update({ "hint": { "text": option_hints[item["value"]] } }) %}
-          {% endif %}
-        {% endfor %}
-        {{ govukRadios({
-          "name": form.sender.name,
-          "fieldset": {
-            "legend": {
-              "text": form.sender.label.text,
-              "classes": "govuk-visually-hidden"
-            }
-          },
-          "items": items
-        }) }}
+        {{ form.sender }}
         {{ page_footer('Continue') }}
       {% endcall %}
     </div>

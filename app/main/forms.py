@@ -1780,9 +1780,10 @@ class SetSenderForm(StripWhitespaceForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.sender.choices = kwargs['sender_choices']
-        self.sender.label.text = kwargs['sender_label']
+        self.sender.param_extensions = {'fieldset': {'legend': {
+            'text': kwargs['sender_label'], 'classes': 'govuk-visually-hidden'}}}
 
-    sender = RadioField()
+    sender = govukRadioField()
 
 
 class SetTemplateSenderForm(StripWhitespaceForm):
