@@ -1183,7 +1183,7 @@ class LetterUploadPostageForm(StripWhitespaceForm):
     def show_postage(self):
         return len(self.postage.choices) > 1
 
-    postage = RadioField(
+    postage = govukRadioField(
         'Choose the postage for this letter',
         choices=[
             ('first', 'First class post'),
