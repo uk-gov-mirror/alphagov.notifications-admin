@@ -330,7 +330,14 @@ class govukRadioField(govukMultiOptionMixin, RadioField):
         # error messages
         error_message = None
         if field.errors:
-            error_message = {"text": " ".join(field.errors).strip()}
+            error_message = {
+                "attributes": {
+                    "data-module": "track-error",
+                    "data-error-type": field.errors[0],
+                    "data-error-label": field.name
+                },
+                "text": " ".join(field.errors).strip()
+            }
 
         # returns either a list or a hierarchy of lists
         # depending on how get_items_from_options is implemented
