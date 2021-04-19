@@ -16,6 +16,9 @@
         {% endif %}
       {% endif %}
       <div class="navigation-service-name govuk-!-font-weight-bold">
+        {% if not current_service.active %}
+        [SUSPENDED]
+        {% endif %}
         {{ current_service.name }}
         {% if current_service.has_permission('broadcast') %}
           {% if current_service.trial_mode %}
