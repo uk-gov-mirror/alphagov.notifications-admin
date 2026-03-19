@@ -1,7 +1,3 @@
-/**
- * @jest-environment @happy-dom/jest-environment
- */
-
 import CheckReportStatus from '../../app/assets/javascripts/esm/check-report-status.mjs';
 import { afterAll, jest } from '@jest/globals';
 import * as helpers from './support/helpers';
@@ -9,9 +5,9 @@ import * as helpers from './support/helpers';
 describe('CheckReportStatus', () => {
   let $module;
   let mockFetch;
-  let mockLocation;
   let checkReportStatus;
-  const route = `/services/serviceID/download-report/requestID`;
+  const route = '/services/serviceID/download-report/requestID';
+  const originalLocation = window.location;
 
   beforeAll(() => {
     jest.useFakeTimers();
@@ -32,11 +28,18 @@ describe('CheckReportStatus', () => {
     mockFetch = jest.fn();
     window.fetch = mockFetch;
 
-    // Mock the window location object
-    mockLocation = new helpers.LocationMock();
-    window.location = mockLocation;
-    window.location.pathname = route;
-    window.location.replace = jest.fn();
+  const route = `http://localhost${route}`
+  delete window.location;
+  window.location = Object.defineProperties(
+    {}, 
+    {
+      ...Object.getOwnPropertyDescriptors(originalLocation),
+      pathname: { value: route, configurable: true },
+      replace: { value: jest.fn(), configurable: true },
+      assign: { value: jest.fn(), configurable: true },
+      href: { value: route, configurable: true }
+    }
+  );
 
     // Spy on console.error
     console.error = jest.fn();
@@ -49,7 +52,7 @@ describe('CheckReportStatus', () => {
     // Clean up the mock module and restore the original functions
     document.body.removeChild($module);
     jest.restoreAllMocks();
-    mockLocation.reset()
+    window.location = originalLocation;
   });
 
   describe('checkStatus', () => {
@@ -101,12 +104,10 @@ describe('CheckReportStatus', () => {
       });
 
       it('should redirect after the specified delay', () => {
-        const replaceSpy = jest.spyOn(window.location, 'replace');
-
-        expect(replaceSpy).not.toHaveBeenCalled();
+        expect(window.location.replace).not.toHaveBeenCalled();
         expect(setTimeout.mock.lastCall[1]).toEqual(checkReportStatus.redirectDelay);
         jest.advanceTimersByTime(checkReportStatus.redirectDelay + 1);
-        expect(replaceSpy).toHaveBeenCalledWith(route);
+        expect(window.location.replace).toHaveBeenCalledWith(route);
       });
     });
   });
