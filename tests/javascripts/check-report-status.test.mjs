@@ -1,3 +1,7 @@
+/**
+ * @jest-environment @happy-dom/jest-environment
+ */
+
 import CheckReportStatus from '../../app/assets/javascripts/esm/check-report-status.mjs';
 import { afterAll, jest } from '@jest/globals';
 import * as helpers from './support/helpers';
@@ -97,10 +101,12 @@ describe('CheckReportStatus', () => {
       });
 
       it('should redirect after the specified delay', () => {
-        expect(mockLocation.replace).not.toHaveBeenCalled();
+        const replaceSpy = jest.spyOn(window.location, 'replace');
+
+        expect(replaceSpy).not.toHaveBeenCalled();
         expect(setTimeout.mock.lastCall[1]).toEqual(checkReportStatus.redirectDelay);
         jest.advanceTimersByTime(checkReportStatus.redirectDelay + 1);
-        expect(mockLocation.replace).toHaveBeenCalledWith(route);
+        expect(replaceSpy).toHaveBeenCalledWith(route);
       });
     });
   });

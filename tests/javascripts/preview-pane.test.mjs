@@ -1,3 +1,7 @@
+/**
+ * @jest-environment @happy-dom/jest-environment
+ */
+
 import PreviewPane from '../../app/assets/javascripts/esm/preview-pane.mjs';
 import * as helpers from './support/helpers.js';
 import { jest } from '@jest/globals';
