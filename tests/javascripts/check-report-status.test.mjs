@@ -1,11 +1,10 @@
 import CheckReportStatus from '../../app/assets/javascripts/esm/check-report-status.mjs';
 import { afterAll, jest } from '@jest/globals';
-import * as helpers from './support/helpers';
+import * as utils from '../../app/assets/javascripts/esm/helpers.mjs'
 
 describe('CheckReportStatus', () => {
   let $module;
   let mockFetch;
-  let mockLocation;
   let checkReportStatus;
   const route = `/services/serviceID/download-report/requestID`;
 
@@ -15,6 +14,7 @@ describe('CheckReportStatus', () => {
 
   beforeEach(() => {
     jest.spyOn(global, 'setTimeout');
+    jest.spyOn(utils, "locationReplace");
     // Create a mock module element
     document.body.classList.add('govuk-frontend-supported')
     document.body.innerHTML = `
@@ -24,15 +24,11 @@ describe('CheckReportStatus', () => {
     `;
     $module = document.querySelector('[data-notify-module="check-report-status"]');
 
+    history.replaceState(history.state, null, route);
+
     // Mock the window fetch function
     mockFetch = jest.fn();
     window.fetch = mockFetch;
-
-    // Mock the window location object
-    mockLocation = new helpers.LocationMock();
-    window.location = mockLocation;
-    window.location.pathname = route;
-    window.location.replace = jest.fn();
 
     // Spy on console.error
     console.error = jest.fn();
@@ -45,7 +41,6 @@ describe('CheckReportStatus', () => {
     // Clean up the mock module and restore the original functions
     document.body.removeChild($module);
     jest.restoreAllMocks();
-    mockLocation.reset()
   });
 
   describe('checkStatus', () => {
@@ -97,10 +92,10 @@ describe('CheckReportStatus', () => {
       });
 
       it('should redirect after the specified delay', () => {
-        expect(mockLocation.replace).not.toHaveBeenCalled();
+        expect(utils.locationReplace).not.toHaveBeenCalled();
         expect(setTimeout.mock.lastCall[1]).toEqual(checkReportStatus.redirectDelay);
         jest.advanceTimersByTime(checkReportStatus.redirectDelay + 1);
-        expect(mockLocation.replace).toHaveBeenCalledWith(route);
+        expect(utils.locationReplace).toHaveBeenCalledWith(route);
       });
     });
   });
