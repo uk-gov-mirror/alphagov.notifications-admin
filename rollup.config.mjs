@@ -1,9 +1,32 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import multi from '@rollup/plugin-multi-entry';
 import terser from '@rollup/plugin-terser';
 import copy from 'rollup-plugin-copy';
 import styles from "rollup-plugin-styler";
 import postCSSReplace from 'postcss-replace';
+import fs from 'fs';
+import path from 'path';
+import strict from 'assert/strict';
+ 
+
+const LEGACY_BUNDLE_ID = 'legacy-bundle'
+// Simple file concatenation plugin
+const concatenateFiles = (files) => ({
+  // checking ID as it's a virtual module
+  // https://rollupjs.org/plugin-development/#a-simple-example
+  resolveId(id) {
+    if (id === LEGACY_BUNDLE_ID) return id;
+  },
+  load(id) {
+    if (id === LEGACY_BUNDLE_ID) {
+      return files
+      .map(file => {
+        const fullPath = path.resolve(file);
+        return fs.readFileSync(fullPath, 'utf-8');
+      })
+      .join('\n');
+    }
+  }
+});
 
 const paths = {
   src: 'app/assets/',
@@ -89,29 +112,27 @@ export default [
   },
   // ES5 JS compilation
   {
-    input: [
-      paths.npm + 'jquery/dist/jquery.min.js',
-      paths.npm + 'timeago/jquery.timeago.js',
-      paths.npm + 'textarea-caret/index.js',
-      paths.npm + 'cbor-js/cbor.js',
-      paths.src + 'javascripts/modules.js',
-      paths.src + 'javascripts/stick-to-window-when-scrolling.js',
-      paths.src + 'javascripts/templateFolderForm.js',
-      paths.src + 'javascripts/main.js',
-    ],
+    input: LEGACY_BUNDLE_ID,
+    context: 'window',
+    external: [],
     output: {
-      dir: paths.dist + 'javascripts/',
-      sourcemap: true
-    },
-    moduleContext: {
-      './node_modules/jquery/dist/jquery.min.js': 'window',
-      './node_modules/cbor-js/cbor.js': 'window',
+      file: paths.dist + 'javascripts/all.js',
+      format: 'cjs',
+      sourcemap: true,
+      exports: 'none',
+      strict: false
     },
     plugins: [
-      nodeResolve(),
-      multi({
-        entryFileName: 'all.js'
-      }),
+      concatenateFiles([
+          paths.npm + 'jquery/dist/jquery.min.js',
+          paths.npm + 'timeago/jquery.timeago.js',
+          paths.npm + 'textarea-caret/index.js',
+          paths.npm + 'cbor-js/cbor.js',
+          paths.src + 'javascripts/modules.js',
+          paths.src + 'javascripts/stick-to-window-when-scrolling.js',
+          paths.src + 'javascripts/templateFolderForm.js',
+          paths.src + 'javascripts/main.js'
+        ]),
       terser({
         ecma: '5'
       }),
