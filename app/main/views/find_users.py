@@ -1,5 +1,6 @@
 from flask import abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user
+from markupsafe import Markup
 from notifications_python_client.errors import HTTPError
 
 from app import user_api_client
@@ -44,8 +45,24 @@ def archive_user(user_id):
             new_msg = "User cannot be removed from a service"
             if e.status_code == 400 and ("manage_settings" in e.message or new_msg in e.message):
                 flash(
-                    "User can’t be removed from a service - "
-                    "check all services have another team member with manage_settings"
+                    Markup(
+                        """
+                        <h2 class='govuk-heading-m'>You cannot archive this user</h2>
+                        <p class='govuk-body error-text-colour govuk-!-font-weight-bold'>
+                            Services must have 2 team members with the ‘manage settings’ permission.
+                        </p>
+                        <p class='govuk-body error-text-colour govuk-!-font-weight-bold'>
+                            Ask the user to either:
+                        </p>
+                        <ul class='govuk-list govuk-list--bullet govuk-body error-text-colour govuk-!-font-weight-bold'>
+                            <li>give another team member the ‘manage settings’ permission on their service(s), or</li>
+                            <li>confirm their service can be deleted</li>
+                        </ul>
+                        <p class='govuk-body error-text-colour govuk-!-font-weight-bold'>
+                            Once a team member has been added or the service is deleted, you can try again.
+                        </p>
+                        """
+                    )
                 )
                 return redirect(url_for("main.user_information", user_id=user_id))
 
