@@ -456,6 +456,7 @@ def send_one_off_step(service_id, template_id, step_index):  # noqa: C901
         template_type=template.template_type,
         allow_international_phone_numbers=current_service.has_permission("international_sms"),
         allow_sms_to_uk_landline=current_service.has_permission("sms_to_uk_landlines"),
+        block_ofcom_protected_blocks=current_service.has_permission("block_ofcom_protected_block"),
     )
 
     template.values = template_values
