@@ -2017,15 +2017,16 @@ def test_link_to_upload_not_offered_when_entering_personalisation(
     assert "Upload" not in page.select_one("main").text
 
 
-@pytest.mark.parametrize("template_content", (
-     pytest.param(
-         "Hello ((Under 18??You are a child))"
-     ),
-     pytest.param(
-        "Hello ((Under 18))",
-        marks=pytest.mark.xfail(raises=AssertionError),
-     )   
-))
+@pytest.mark.parametrize(
+    "template_content",
+    (
+        pytest.param("Hello ((Under 18??You are a child))"),
+        pytest.param(
+            "Hello ((Under 18))",
+            marks=pytest.mark.xfail(raises=AssertionError),
+        ),
+    ),
+)
 def test_send_one_off_step_shows_radios_for_conditional(
     client_request,
     fake_uuid,
@@ -2036,10 +2037,7 @@ def test_send_one_off_step_shows_radios_for_conditional(
         "app.service_api_client.get_service_template",
         return_value={
             "data": template_json(
-                id_=fake_uuid,
-                service_id=SERVICE_ONE_ID,
-                name="Two week reminder",
-                content=template_content
+                id_=fake_uuid, service_id=SERVICE_ONE_ID, name="Two week reminder", content=template_content
             )
         },
     )
@@ -2054,8 +2052,9 @@ def test_send_one_off_step_shows_radios_for_conditional(
         template_id=fake_uuid,
         step_index=1,
     )
-    
+
     assert not page.select("input[type=text]")
+    assert "govuk-radios--inline" in page.select_one(".govuk-radios")["class"]
     assert normalize_spaces(page.select_one("#placeholder_value legend").text) == "Under 18"
     assert [
         (
